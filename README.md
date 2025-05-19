@@ -1,5 +1,5 @@
 # Cowrywise-Data-Analyst-Assessment
-This repository contains my solution to the **SQL Data Analytics Assessment**. The assessment tests SQL proficiency by querying a relational database involving customer accounts, plans, deposits, and withdrawals.
+This repository contains my solution to the **SQL Data Analytics Assessment**. The assessment tested my SQL proficiency, requiring me to query a relational database involving customer accounts, plans, deposits, and withdrawals.
 
 ---
 
@@ -12,12 +12,6 @@ The assessment involved working with the following key tables:
 - **`savings_savingsaccount`**: Records deposit transactions (e.g., `confirmed_amount`, `transaction_status`)  
 - **`withdrawals_withdrawal`**: Records withdrawal transactions  
 
-### 🧠 Key Insights
-
-- `plans_plan` uses `TINYINT(1)` flags to distinguish plan types
-- Amounts in `confirmed_amount` are stored in **kobo** (₦1 = 100 kobo)
-- Only transactions with `transaction_status = 'success'` are valid for analysis
-
 ---
 
 ## ✅ Solution Breakdown
@@ -29,16 +23,14 @@ Identify customers with both savings and investment plans, ordered by total depo
 
 **Approach:**
 
-- Used a **CTE** to count savings (`is_regular_savings = 1`) and investment (`is_a_fund = 1`) plans per customer
-- Converted `confirmed_amount` from **kobo to naira**
-- Filtered customers with **at least one of each** plan type
-- Sorted by **total deposits (descending)**
+- Used a **CTE**(Common Table Expression) to count savings (`is_regular_savings = 1`) and investment (`is_a_fund = 1`) plans per customer
+- Converted `confirmed_amount` from kobo to naira
+- Filtered customers with at least one of each plan type
+- Sorted by total deposits in descending order
 
 **Challenges:**
 
-- Currency conversion (kobo ➝ naira)
 - Correctly identifying plan types using flag fields
-- Filtering by `transaction_status = 'success'`
 - Ensuring proper handling of `confirmed_amount` (stored as `double`)
 
 ---
@@ -53,7 +45,7 @@ Calculate average monthly transactions per customer and categorize by frequency.
 - Built a **3-step CTE pipeline**:
   1. Monthly transaction count per customer
   2. Average transactions per customer
-  3. Categorize customers by frequency (e.g., low, medium, high)
+  3. Categorize customers by frequency (low, medium, high)
 
 - Used a `CASE` statement for category classification
 
@@ -61,14 +53,13 @@ Calculate average monthly transactions per customer and categorize by frequency.
 
 - Extracting **year/month** from transaction dates
 - Handling **different activity durations** per customer
-- Filtering for `confirmed_amount > 0` and `transaction_status = 'success'`
 
 ---
 
 ### **Question 3: Account Inactivity Alert**
 
 **Task:**  
-Identify **active accounts** with **no transactions in the past 365 days**
+Identify active accounts with **no transactions in the past 365 days**
 
 **Approach:**
 
@@ -96,20 +87,18 @@ Estimate CLV based on **account tenure** and **transaction volume**
 **Approach:**
 
 - Used a CTE to calculate:
-  - Tenure in **months**
+  - Tenure in months
   - Total number of transactions
   - Total transaction value
 - Applied CLV formula:  
   `CLV = (total_transactions / tenure_months) * 12 * (total_amount * 0.001 / 100)`
 - Filtered out zero-tenure customers to avoid division errors
-- Ordered by estimated CLV descending
+- Ordered by estimated CLV in descending order
 
 **Challenges:**
 
 - Using MySQL’s `PERIOD_DIFF()` instead of SQL Server’s `DATEDIFF(MONTH, ...)`
-- Currency conversion (from **kobo** to **naira**)
 - Accurate application of **0.1% profit rate**
-- Handling edge cases like `tenure_months = 0`
 
 ---
 
@@ -117,17 +106,11 @@ Estimate CLV based on **account tenure** and **transaction volume**
 
 Throughout the assessment, I focused on:
 
-- **✅ Query Readability**: Leveraged **CTEs** for modular, readable logic
-- **⚡ Performance**: Reduced unnecessary joins and filtered early
-- **💰 Currency Handling**: Converted kobo → naira consistently
-- **🧩 Schema Mastery**: Fully utilized plan flags and status indicators
-- **🛡️ Error Prevention**: Safeguarded against division by zero and nulls
-- **📚 Documentation**: Included detailed in-query comments
+- **Query Readability**: Utilizing **CTEs** for modular, readable logic
+- **Performance**: Reduced unnecessary joins and filtered early
+- **Currency Handling**: Converted kobo → naira consistently
+- **Schema Mastery**: Fully utilized plan flags and status indicators
+- **Error Prevention**: Safeguarded against division by zero and nulls
+- **Documentation**: Included detailed in-query comments
 
 ---
-
-## 📌 Conclusion
-
-Each SQL query in this assessment was designed with **clarity**, **efficiency**, and **accuracy**. The process began with understanding the schema and relationships, followed by crafting solutions that are maintainable and logically sound.
-
-> Feel free to explore the `queries/` folder for individual SQL scripts used for each question.
